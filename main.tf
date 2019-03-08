@@ -42,9 +42,8 @@ resource "aws_vpc" "this" {
   tags {
     Name          = "${var.vpc_name}"
     MultiTier     = "${var.vpc_multi_tier ? "true" : "false"}"
-    ProductDomain = "${var.product_domain}"
     Environment   = "${var.environment}"
-    Description   = "${var.environment} VPC for ${var.product_domain} product domain"
+    Description   = "${var.environment} VPC for ${var.vpc_name}"
     ManagedBy     = "Terraform"
   }
 }
@@ -62,7 +61,6 @@ resource "aws_subnet" "public" {
   tags {
     Name          = "${var.vpc_name}-public-${substr(element(var.subnet_availability_zones, count.index), -1, 1)}"
     Tier          = "public"
-    ProductDomain = "${var.product_domain}"
     Environment   = "${var.environment}"
     Description   = "Public subnet for ${element(var.subnet_availability_zones, count.index)} AZ on ${var.vpc_name} VPC"
     ManagedBy     = "Terraform"
@@ -82,7 +80,6 @@ resource "aws_subnet" "app" {
   tags {
     Name          = "${var.vpc_name}-app-${substr(element(var.subnet_availability_zones, count.index), -1, 1)}"               # vpc_name="dev"; availability_zone="ap-southeast-1a; Name="dev-app-a"
     Tier          = "app"
-    ProductDomain = "${var.product_domain}"
     Environment   = "${var.environment}"
     Description   = "Application subnet for ${element(var.subnet_availability_zones, count.index)} AZ on ${var.vpc_name} VPC"
     ManagedBy     = "Terraform"
@@ -102,7 +99,6 @@ resource "aws_subnet" "data" {
   tags {
     Name          = "${var.vpc_name}-data-${substr(element(var.subnet_availability_zones, count.index), -1, 1)}"
     Tier          = "data"
-    ProductDomain = "${var.product_domain}"
     Environment   = "${var.environment}"
     Description   = "Data subnet for ${element(var.subnet_availability_zones, count.index)} AZ on ${var.vpc_name} VPC"
     ManagedBy     = "Terraform"
@@ -121,7 +117,6 @@ resource "aws_db_subnet_group" "this" {
   tags {
     Name          = "${var.vpc_name}-default-db-subnet-group"
     Tier          = "data"
-    ProductDomain = "${var.product_domain}"
     Environment   = "${var.environment}"
     Description   = "Default DB Subnet Group on ${var.vpc_name} VPC"
     ManagedBy     = "Terraform"
@@ -150,7 +145,6 @@ resource "aws_redshift_subnet_group" "this" {
   tags {
     Name          = "${var.vpc_name}-default-redshift-subnet-group"
     Tier          = "data"
-    ProductDomain = "${var.product_domain}"
     Environment   = "${var.environment}"
     Description   = "Default Redshift Subnet Group on ${var.vpc_name} VPC"
     ManagedBy     = "Terraform"
@@ -180,7 +174,6 @@ resource "aws_eip" "nat" {
 
   tags = {
     Name          = "${var.vpc_name}-eipalloc-${substr(element(var.subnet_availability_zones, count.index), -1, 1)}"
-    ProductDomain = "${var.product_domain}"
     Environment   = "${var.environment}"
     Description   = "NAT Gateway's Elastic IP for ${element(var.subnet_availability_zones, count.index)} AZ on ${var.vpc_name} VPC"
     ManagedBy     = "Terraform"
@@ -205,7 +198,6 @@ resource "aws_nat_gateway" "this" {
 
   tags = {
     Name          = "${var.vpc_name}-nat-${substr(element(var.subnet_availability_zones, count.index), -1, 1)}"
-    ProductDomain = "${var.product_domain}"
     Environment   = "${var.environment}"
     Description   = "NAT Gateway for ${element(var.subnet_availability_zones, count.index)} AZ on ${var.vpc_name} VPC"
     ManagedBy     = "Terraform"
@@ -219,7 +211,6 @@ resource "aws_default_route_table" "this" {
   tags {
     Name          = "${var.vpc_name}-default-rtb"
     Tier          = "default"
-    ProductDomain = "${var.product_domain}"
     Environment   = "${var.environment}"
     Description   = "Default route table for ${var.vpc_name} VPC"
     ManagedBy     = "Terraform"
@@ -234,7 +225,6 @@ resource "aws_route_table" "public" {
   tags = {
     Name          = "${var.vpc_name}-public-rtb"
     Tier          = "public"
-    ProductDomain = "${var.product_domain}"
     Environment   = "${var.environment}"
     Description   = "Route table for public subnet on ${var.vpc_name} VPC"
     ManagedBy     = "Terraform"
@@ -274,7 +264,6 @@ resource "aws_route_table" "app" {
   tags = {
     Name          = "${var.vpc_name}-app-rtb-${substr(element(var.subnet_availability_zones, count.index), -1, 1)}"
     Tier          = "app"
-    ProductDomain = "${var.product_domain}"
     Environment   = "${var.environment}"
     Description   = "Route table for app subnet in ${element(var.subnet_availability_zones, count.index)} AZ of ${var.vpc_name} VPC"
     ManagedBy     = "Terraform"
@@ -319,7 +308,6 @@ resource "aws_route_table" "data" {
   tags = {
     Name          = "${var.vpc_name}-data-rtb-${substr(element(var.subnet_availability_zones, count.index), -1, 1)}"
     Tier          = "data"
-    ProductDomain = "${var.product_domain}"
     Environment   = "${var.environment}"
     Description   = "Route table for data subnet in ${element(var.subnet_availability_zones, count.index)} AZ of ${var.vpc_name} VPC"
     ManagedBy     = "Terraform"
@@ -447,7 +435,6 @@ resource "aws_default_vpc_dhcp_options" "this" {
 
   tags {
     Name          = "${var.vpc_name}-default-dopt"
-    ProductDomain = "${var.product_domain}"
     Environment   = "${var.environment}"
     Description   = "Default AWS DHCP options set for ${var.vpc_name} VPC"
     ManagedBy     = "Terraform"
@@ -478,7 +465,6 @@ resource "aws_default_network_acl" "this" {
 
   tags = {
     Name          = "${var.vpc_name}-default-acl"
-    ProductDomain = "${var.product_domain}"
     Environment   = "${var.environment}"
     Description   = "Default network ACL for ${var.vpc_name} VPC"
     ManagedBy     = "Terraform"
@@ -497,7 +483,6 @@ resource "aws_default_security_group" "this" {
 
   tags = {
     Name          = "${var.vpc_name}-default-sg"
-    ProductDomain = "${var.product_domain}"
     Environment   = "${var.environment}"
     Description   = "Default security group for ${var.vpc_name} VPC"
     ManagedBy     = "Terraform"
@@ -545,7 +530,6 @@ resource "aws_cloudwatch_log_group" "flow_logs" {
 
   tags = {
     Name          = "${random_id.log_group_name.hex}"
-    ProductDomain = "${var.product_domain}"
     Environment   = "${var.environment}"
     Description   = "VPC Flow Logs for ${var.vpc_name} VPC"
     ManagedBy     = "Terraform"

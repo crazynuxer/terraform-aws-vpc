@@ -1,7 +1,3 @@
-variable "product_domain" {
-  description = "Product domain these resources belong to."
-  type        = "string"
-}
 
 variable "environment" {
   description = "Type of environment these resources belong to."
@@ -46,5 +42,5 @@ variable "subnet_availability_zones" {
 
 variable "flow_logs_log_group_retention_period" {
   description = "Specifies the number of days you want to retain log events in the specified log group."
-  default     = 0
+  default     = 30
 }
