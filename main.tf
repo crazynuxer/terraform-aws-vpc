@@ -157,7 +157,6 @@ resource "aws_internet_gateway" "this" {
 
   tags = {
     Name          = "${var.vpc_name}-igw"
-    ProductDomain = "${var.product_domain}"
     Environment   = "${var.environment}"
     Description   = "Internet gateway for ${var.vpc_name} VPC"
     ManagedBy     = "Terraform"
